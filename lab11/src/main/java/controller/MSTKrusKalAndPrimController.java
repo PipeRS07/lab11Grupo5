@@ -2,13 +2,12 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -72,7 +71,6 @@ public class MSTKrusKalAndPrimController {
     }
 
     private void generateRandomGraph(int totalVertices) {
-        // Generar vértices aleatorios
         Random random = new Random();
         for (int i = 0; i < totalVertices; i++) {
             Vertex vertex = new Vertex(i);
@@ -81,8 +79,9 @@ public class MSTKrusKalAndPrimController {
             double y = centerY + circleRadius * Math.sin(angle);
             vertex.setX(x);
             vertex.setY(y);
+            vertex.setData(util.Utility.getRandom(100)); // Asignación aleatoria para 'data'
+            vertex.setPeso(util.Utility.getRandom(200, 1000)); // Asignación aleatoria para 'peso'
             vertices.add(vertex);
-            drawVertex(vertex);
         }
 
         // Generar aristas aleatorias con pesos
@@ -92,9 +91,20 @@ public class MSTKrusKalAndPrimController {
                     int weight = 200 + random.nextInt(801); // Peso entre 200 y 1000
                     Edge edge = new Edge(vertices.get(i), vertices.get(j), weight);
                     edges.add(edge);
-                    drawEdge(edge);
                 }
             }
+        }
+
+        // Dibujar el grafo completo
+        drawGraph();
+    }
+
+    private void drawGraph() {
+        for (Edge edge : edges) {
+            drawEdge(edge);
+        }
+        for (Vertex vertex : vertices) {
+            drawVertex(vertex);
         }
     }
 
@@ -132,6 +142,11 @@ public class MSTKrusKalAndPrimController {
         circle.setStroke(Color.DARKBLUE);
         circle.setStrokeWidth(2);
         dibujo1.getChildren().add(circle);
+
+        // Mostrar data y peso junto al vértice
+        Text textData = new Text(vertex.getX() - 10, vertex.getY() - 25, String.valueOf(vertex.getData()));
+        Text textPeso = new Text(vertex.getX() - 10, vertex.getY() - 10, String.valueOf(vertex.getPeso()));
+        dibujo1.getChildren().addAll(textData, textPeso);
     }
 
     private void drawEdge(Edge edge) {
@@ -175,13 +190,30 @@ public class MSTKrusKalAndPrimController {
         PrimRadioButton.setSelected(true);
     }
 
-
     class Vertex {
         private int id;
         private double x, y;
+        private int data; // Nuevo atributo 'data'
+        private int peso; // Nuevo atributo 'peso'
 
         public Vertex(int id) {
             this.id = id;
+        }
+
+        public int getData() {
+            return data;
+        }
+
+        public void setData(int data) {
+            this.data = data;
+        }
+
+        public int getPeso() {
+            return peso;
+        }
+
+        public void setPeso(int peso) {
+            this.peso = peso;
         }
 
         public double getX() {
