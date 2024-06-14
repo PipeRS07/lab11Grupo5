@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -16,7 +17,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.*;
 
@@ -49,6 +49,10 @@ public class DijkstraController {
     @FXML
     public void initialize() {
         vertices = new ArrayList<>();
+        // Configurar cell value factory para las columnas de la tabla
+        Position.setCellValueFactory(cellData -> cellData.getValue().positionProperty().asObject());
+        Vertex.setCellValueFactory(cellData -> cellData.getValue().vertexProperty().asObject());
+        Distance.setCellValueFactory(cellData -> cellData.getValue().distanceProperty().asObject());
     }
 
     @FXML
@@ -104,6 +108,9 @@ public class DijkstraController {
             data.add(new VertexDistance(i, i, distancias[i]));
         }
         tableView.setItems(data);
+
+        // Actualizar la vista de la tabla para que se muestren los datos
+        tableView.refresh();
     }
 
     private void drawVertex(Vertex vertex) {
