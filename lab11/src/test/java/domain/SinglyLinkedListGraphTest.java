@@ -9,41 +9,71 @@ import static org.junit.jupiter.api.Assertions.*;
 class SinglyLinkedListGraphTest {
 
     @Test
-    void test() {
+    void testSinglyLinkedListGraph(){
         SinglyLinkedListGraph graph = new SinglyLinkedListGraph();
         try {
-            graph.addVertex('A');
-            graph.addVertex('B');
-            graph.addVertex('C');
-            graph.addVertex('D');
-            graph.addVertex('E');
-            graph.addVertex('F');
-            graph.addVertex('G');
-            graph.addVertex('H');
+            graph.addVertex('a');
+            graph.addVertex('b');
+            graph.addVertex('c');
+            graph.addVertex('d');
+            graph.addVertex('e');
+            graph.addVertex('f');
+            graph.addVertex('g');
+            graph.addVertex('h');
+            graph.addVertex('i');
+            graph.addVertex('j');
 
-            graph.addEdgeWeight('A', 'B', 20);
-            graph.addEdgeWeight('A', 'E', 15);
-            graph.addEdgeWeight('B', 'C', 10);
-            graph.addEdgeWeight('E', 'F', 30);
-            graph.addEdgeWeight('C', 'D', 40);
-            graph.addEdgeWeight('F', 'G', 5);
-            graph.addEdgeWeight('G', 'H', 7);
+            graph.addEdgeWeight('a', 'b', "Maria");
+            graph.addEdgeWeight('a', 'c', "Lucia");
+            graph.addEdgeWeight('b', 'f', "Daniel");
+            graph.addEdgeWeight('c', 'g', "Juan");
+            graph.addEdgeWeight('d', 'h', "Jose");
+            graph.addEdgeWeight('f', 'e', "Vero");
+            graph.addEdgeWeight('f', 'j', "Nigel");
+            graph.addEdgeWeight('g', 'j', "Felipe");
+            graph.addEdgeWeight('h', 'j', "Juan");
+            graph.addEdgeWeight('i', 'h', "Julia");
+            System.out.println(graph.containsEdge('i', 'h'));
+            System.out.println(graph.containsEdge('h', 'i'));
 
-            //lanza una excepción
-            //graph.addEdgeWeight('G', 'K', 7);
 
-            System.out.println(graph.toString());
+            System.out.println(graph);
+            System.out.println("***************************************\n");
+            System.out.println("Recorrido dfs()" + graph.dfs());
+            System.out.println("Recorrido bfs()" + graph.bfs());
+            System.out.println("\n*************************************\n");
 
-            //Busqueda en Profundidad
-            System.out.println("\nRECORRIDO CON EL ALGORITMO DFS (DEPTH FIRST SEARCH): "
-                    +"\n"+graph.dfs());
+            graph.removeEdge('b', 'f');
+            graph.removeEdge('e', 'f');
+            graph.removeEdge('j', 'f');
+            graph.removeVertex('f');
 
-            //Busqueda en Amplitud
-            System.out.println("\nRECORRIDO CON EL ALGORITMO BFS (BREADTH FIRST SEARCH): "
-                    +"\n"+graph.bfs());
+            graph.removeEdge('h', 'j');
+            graph.removeEdge('h', 'i');
+            graph.removeEdge('h', 'd');
+            graph.removeVertex('h');
 
-        } catch (GraphException | ListException | StackException | QueueException e) {
+            graph.removeEdge('j', 'g');
+            graph.removeVertex('g');
+
+            System.out.println("***************************************\n");
+            System.out.println("Recorrido dfs()" + graph.dfs());
+            System.out.println("Recorrido bfs()" + graph.bfs());
+            System.out.println("\n*************************************\n");
+            System.out.println(graph);
+
+
+
+
+        } catch (GraphException e) {
+            throw new RuntimeException(e);
+        } catch (ListException e) {
+            throw new RuntimeException(e);
+        } catch (QueueException e) {
+            throw new RuntimeException(e);
+        } catch (StackException e) {
             throw new RuntimeException(e);
         }
+
     }
 }
