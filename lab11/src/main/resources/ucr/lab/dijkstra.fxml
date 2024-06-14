@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DijkstraController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.14-internal" fx:controller="controller.DijkstraController">
    <children>
       <Pane fx:id="dibujo" layoutX="70.0" layoutY="210.0" prefHeight="284.0" prefWidth="343.0" style="-fx-background-color: #2222;" />
       <Button layoutX="297.0" layoutY="59.0" mnemonicParsing="false" onAction="#randomizeOnAction" prefHeight="25.0" prefWidth="226.0" style="-fx-background-color: #1e1e1e;" text="Randomize" textFill="WHITE" />
@@ -13,9 +13,9 @@
             <Font name="Bauhaus 93" size="19.0" />
          </font>
       </Text>
-      <RadioButton fx:id="AdjMatrix" layoutX="109.0" layoutY="134.0" mnemonicParsing="false" text="Adjacency Matrix" />
-      <RadioButton fx:id="AdjList" layoutX="109.0" layoutY="156.0" mnemonicParsing="false" text="Adjacency List" />
-      <RadioButton fx:id="LinkedList" layoutX="109.0" layoutY="178.0" mnemonicParsing="false" text="Linked List" />
+      <RadioButton fx:id="AdjMatrix" layoutX="109.0" layoutY="134.0" mnemonicParsing="false" onAction="#AdjMatrixOnAction" text="Adjacency Matrix" />
+      <RadioButton fx:id="AdjList" layoutX="109.0" layoutY="156.0" mnemonicParsing="false" onAction="#AdjListOnAction" text="Adjacency List" />
+      <RadioButton fx:id="LinkedList" layoutX="109.0" layoutY="178.0" mnemonicParsing="false" onAction="#LinkedListOnAction" text="Linked List" />
       <TableView fx:id="tableView" layoutX="493.0" layoutY="210.0" prefHeight="234.0" prefWidth="226.0">
          <columns>
             <TableColumn fx:id="Position" prefWidth="75.0" text="Position" />

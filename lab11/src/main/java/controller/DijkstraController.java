@@ -151,6 +151,28 @@ public class DijkstraController {
         dibujo.getChildren().add(edgeGroup);
     }
 
+    @FXML
+    public void AdjMatrixOnAction(ActionEvent actionEvent) {
+        AdjMatrix.setSelected(true);
+        AdjList.setSelected(false);
+        LinkedList.setSelected(false);
+
+    }
+
+    @FXML
+    public void AdjListOnAction(ActionEvent actionEvent) {
+        AdjMatrix.setSelected(false);
+        AdjList.setSelected(true);
+        LinkedList.setSelected(false);
+    }
+
+    @FXML
+    public void LinkedListOnAction(ActionEvent actionEvent) {
+        AdjMatrix.setSelected(false);
+        AdjList.setSelected(false);
+        LinkedList.setSelected(true);
+    }
+
     private static class Grafo {
         private final int numVertices;
         private final int[][] matrizAdyacencia;
