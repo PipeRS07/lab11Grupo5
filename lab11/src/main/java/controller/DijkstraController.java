@@ -22,6 +22,7 @@ import java.util.*;
 
 public class DijkstraController {
 
+
     @FXML
     private TableColumn<VertexDistance, Integer> Vertex;
     @FXML
