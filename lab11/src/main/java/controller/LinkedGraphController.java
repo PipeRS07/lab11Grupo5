@@ -91,13 +91,17 @@ public class LinkedGraphController {
 
         // Dibujar aristas entre vértices de manera aleatoria
         Random random = new Random();
+        int maxEdgesPerVertex = 3;  // Número máximo de aristas por nodo
+
+        // Agregar aristas entre los vértices de forma aleatoria
         for (int i = 0; i < totalVertices; i++) {
-            for (int j = i + 1; j < totalVertices; j++) {
-                if (random.nextBoolean()) {
+            for (int j = 0; j < maxEdgesPerVertex; j++) {
+                int randomIndex = random.nextInt(totalVertices);
+                if (i != randomIndex) {
                     try {
-                        int weight = 1000 + random.nextInt(2000); // Peso entre 1 y 10
-                        graph.addEdgeWeight(vertices.get(i).getData(), vertices.get(j).getData(), weight);
-                        drawEdge(vertices.get(i), vertices.get(j), weight);
+                        int weight = 1000 + random.nextInt(1001);
+                        graph.addEdgeWeight(vertices.get(i).getData(), vertices.get(randomIndex).getData(), weight);
+                        drawEdge(vertices.get(i), vertices.get(randomIndex), weight);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -149,17 +153,17 @@ public class LinkedGraphController {
     private void drawEdge(Vertex v1, Vertex v2, int weight) {
         Line line = new Line(v1.getX(), v1.getY(), v2.getX(), v2.getY());
         line.setStroke(Color.GRAY);
-        line.setStrokeWidth(2);
+        line.setStrokeWidth(2); // Puedes ajustar el grosor de la línea aquí
 
         Text weightText = new Text((v1.getX() + v2.getX()) / 2, (v1.getY() + v2.getY()) / 2, String.valueOf(weight));
         weightText.setBoundsType(TextBoundsType.VISUAL);
         weightText.setFill(Color.RED);
 
-        // Cambiar color de la arista y mostrar peso al pasar el ratón sobre ella
+        // Cambiar color de la arista y mostrar nombres y peso al pasar el ratón sobre ella
         line.setOnMouseEntered(e -> {
             line.setStroke(Color.BLUE); // Cambiar color de la arista al pasar el ratón
             weightText.setFill(Color.BLUE); // Cambiar color del texto del peso
-            textInfo.setText("Peso de la arista: " + weight); // Mostrar peso en textInfo
+            textInfo.setText("Edge between vertices: " + v1.getData() + " - " + v2.getData() + ", Weight: " + weight); // Mostrar información en textInfo
         });
 
         // Restaurar color original de la arista al salir el ratón
@@ -169,9 +173,10 @@ public class LinkedGraphController {
             textInfo.setText(""); // Limpiar textInfo
         });
 
-        Group edgeGroup = new Group(line, weightText);
+        Group edgeGroup = new Group(line);
         dibujo.getChildren().add(edgeGroup);
     }
+
 
     @FXML
     public void BFSOnAAction(ActionEvent actionEvent) {

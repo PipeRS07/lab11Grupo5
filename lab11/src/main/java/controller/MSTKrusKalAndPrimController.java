@@ -3,217 +3,205 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextBoundsType;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class MSTKrusKalAndPrimController {
 
     @FXML
     private Text textInfo;
-
-    @FXML
-    private RadioButton AdjMatrix;
-
-    @FXML
-    private RadioButton AdjList;
-
-    @FXML
-    private RadioButton LinkedList;
-
-    private ToggleGroup mstAlgorithmToggleGroup;
-
-    private List<Vertex> vertices;
-    private List<Edge> edges;
-
-    private final int vertexRadius = 20;
-    private final double centerX = 300; // Coordenada X del centro del círculo
-    private final double centerY = 300; // Coordenada Y del centro del círculo
-    private final double circleRadius = 200; // Radio del círculo
-    @FXML
-    private RadioButton KruskalRadioButton;
     @FXML
     private Pane dibujo1;
     @FXML
+    private RadioButton AdjMatrix;
+    @FXML
+    private RadioButton AdjList;
+    @FXML
+    private Pane dibujo;
+    @FXML
     private Text textInfo1;
     @FXML
-    private RadioButton PrimRadioButton;
+    private RadioButton LinkedList;
     @FXML
-    private Pane dibujo11;
+    private RadioButton Kruskal;
+    @FXML
+    private RadioButton Prim;
 
-    public MSTKrusKalAndPrimController() {
-        vertices = new ArrayList<>();
-        edges = new ArrayList<>();
-    }
+    private Graph graph;
+    private List<Edge> mstEdges;
+    private List<Vertex> vertices;
+    private final int vertexRadius = 20;
+    private double centerX;
+    private double centerY;
+    private double circleRadius;
 
     @FXML
     public void initialize() {
-        mstAlgorithmToggleGroup = new ToggleGroup();
-        KruskalRadioButton.setToggleGroup(mstAlgorithmToggleGroup);
-        PrimRadioButton.setToggleGroup(mstAlgorithmToggleGroup);
+        vertices = new ArrayList<>();
     }
 
     @FXML
     public void randomizeOnAction(ActionEvent actionEvent) {
+        dibujo.getChildren().clear();
         dibujo1.getChildren().clear();
         vertices.clear();
-        edges.clear();
 
-        int totalVertices = 10; // Cambiar según tus necesidades
-        generateRandomGraph(totalVertices);
-    }
+        // Configurar las coordenadas del centro y el radio del círculo basado en el tamaño del Pane
+        centerX = dibujo.getWidth() / 2;
+        centerY = dibujo.getHeight() / 2;
+        circleRadius = Math.min(centerX, centerY) - vertexRadius - 10; // Dejar un pequeño margen
 
-    private void generateRandomGraph(int totalVertices) {
         Random random = new Random();
-        for (int i = 0; i < totalVertices; i++) {
-            Vertex vertex = new Vertex(i);
-            double angle = (2 * Math.PI * i) / totalVertices;
+        int numVertices = 10; // Número de vértices
+        graph = generateRandomGraph(numVertices, random);
+
+        double angleStep = 2 * Math.PI / numVertices;
+
+        // Calcular posiciones de los vértices en el círculo
+        for (int i = 0; i < numVertices; i++) {
+            Vertex vertex = vertices.get(i);
+
+            // Calcular posición en el círculo
+            double angle = i * angleStep;
             double x = centerX + circleRadius * Math.cos(angle);
             double y = centerY + circleRadius * Math.sin(angle);
+
             vertex.setX(x);
             vertex.setY(y);
-            vertex.setData(util.Utility.getRandom(100)); // Asignación aleatoria para 'data'
-            vertex.setPeso(util.Utility.getRandom(200, 1000)); // Asignación aleatoria para 'peso'
-            vertices.add(vertex);
+
+            drawVertex(vertex, dibujo);
         }
 
-        // Generar aristas aleatorias con pesos
-        for (int i = 0; i < totalVertices; i++) {
-            for (int j = i + 1; j < totalVertices; j++) {
+        // Dibujar aristas del grafo original
+        for (Edge edge : graph.getEdges()) {
+            drawEdge(vertices.get(edge.getSource()), vertices.get(edge.getDestination()), edge.getWeight(), dibujo);
+        }
+
+        // Ejecutar el algoritmo seleccionado y obtener el MST
+        if (Kruskal.isSelected()) {
+            mstEdges = MSTAlgorithms.kruskalMST(graph);
+        } else if (Prim.isSelected()) {
+            mstEdges = MSTAlgorithms.primMST(graph);
+        }
+
+        // Dibujar el MST
+        for (Edge edge : mstEdges) {
+            drawEdge(vertices.get(edge.getSource()), vertices.get(edge.getDestination()), edge.getWeight(), dibujo1);
+        }
+    }
+
+    private Graph generateRandomGraph(int numVertices, Random random) {
+        Set<Integer> vertexIds = new HashSet<>();
+        while (vertexIds.size() < numVertices) {
+            vertexIds.add(random.nextInt(100));
+        }
+
+        vertices = new ArrayList<>();
+        List<Edge> edges = new ArrayList<>();
+
+        for (int id : vertexIds) {
+            vertices.add(new Vertex(id));
+        }
+
+        for (int i = 0; i < numVertices; i++) {
+            for (int j = i + 1; j < numVertices; j++) {
                 if (random.nextBoolean()) {
-                    int weight = 200 + random.nextInt(801); // Peso entre 200 y 1000
-                    Edge edge = new Edge(vertices.get(i), vertices.get(j), weight);
-                    edges.add(edge);
+                    int weight = 200 + random.nextInt(801);
+                    edges.add(new Edge(i, j, weight));
+                    edges.add(new Edge(j, i, weight)); // Asegurar que sea bidireccional
                 }
             }
         }
 
-        // Dibujar el grafo completo
-        drawGraph();
+        return new Graph(numVertices, edges);
     }
 
-    private void drawGraph() {
-        for (Edge edge : edges) {
-            drawEdge(edge);
-        }
-        for (Vertex vertex : vertices) {
-            drawVertex(vertex);
-        }
-    }
-
-    @Deprecated
-    public void solveMST(ActionEvent actionEvent) {
-        // Verificar qué algoritmo está seleccionado
-        RadioButton selectedAlgorithm = (RadioButton) mstAlgorithmToggleGroup.getSelectedToggle();
-        if (selectedAlgorithm != null) {
-            if (selectedAlgorithm == KruskalRadioButton) {
-                // Lógica para resolver MST usando Kruskal
-                solveMSTKruskal();
-            } else if (selectedAlgorithm == PrimRadioButton) {
-                // Lógica para resolver MST usando Prim
-                solveMSTPrim();
-            }
-        } else {
-            textInfo.setText("Select an algorithm first.");
-        }
-    }
-
-    private void solveMSTKruskal() {
-        // Implementar algoritmo de Kruskal aquí
-        // Puedes usar la lista de aristas 'edges'
-        textInfo.setText("Kruskal algorithm executed.");
-    }
-
-    private void solveMSTPrim() {
-        // Implementar algoritmo de Prim aquí
-        // Puedes usar la lista de vértices 'vertices' y la lista de aristas 'edges'
-        textInfo.setText("Prim algorithm executed.");
-    }
-
-    private void drawVertex(Vertex vertex) {
+    private void drawVertex(Vertex vertex, Pane pane) {
         Circle circle = new Circle(vertex.getX(), vertex.getY(), vertexRadius, Color.LIGHTBLUE);
         circle.setStroke(Color.DARKBLUE);
         circle.setStrokeWidth(2);
-        dibujo1.getChildren().add(circle);
 
-        // Mostrar data y peso junto al vértice
-        Text textData = new Text(vertex.getX() - 10, vertex.getY() - 25, String.valueOf(vertex.getData()));
-        Text textPeso = new Text(vertex.getX() - 10, vertex.getY() - 10, String.valueOf(vertex.getPeso()));
-        dibujo1.getChildren().addAll(textData, textPeso);
+        Text text = new Text(vertex.getX() - vertexRadius / 2, vertex.getY() + vertexRadius / 2, String.valueOf(vertex.getId()));
+        text.setBoundsType(TextBoundsType.VISUAL);
+        text.setFill(Color.BLACK);
+        text.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+
+        pane.getChildren().addAll(circle, text);
     }
 
-    private void drawEdge(Edge edge) {
-        Line line = new Line(edge.getStart().getX(), edge.getStart().getY(),
-                edge.getEnd().getX(), edge.getEnd().getY());
+    private void drawEdge(Vertex v1, Vertex v2, int weight, Pane pane) {
+        Line line = new Line(v1.getX(), v1.getY(), v2.getX(), v2.getY());
         line.setStroke(Color.GRAY);
         line.setStrokeWidth(2);
-        dibujo1.getChildren().add(line);
-    }
 
-    @javafx.fxml.FXML
-    public void radioB3OnAction(ActionEvent actionEvent) {
-        this.AdjMatrix.setSelected(false);
-        this.AdjList.setSelected(false);
-        this.LinkedList.setSelected(true);
-    }
+        Text weightText = new Text((v1.getX() + v2.getX()) / 2, (v1.getY() + v2.getY()) / 2, String.valueOf(weight));
+        weightText.setBoundsType(TextBoundsType.VISUAL);
+        weightText.setFill(Color.RED);
 
-    @javafx.fxml.FXML
-    public void radioB1OnAction(ActionEvent actionEvent) {
-        this.AdjMatrix.setSelected(true);
-        this.AdjList.setSelected(false);
-        this.LinkedList.setSelected(false);
-    }
-
-    @javafx.fxml.FXML
-    public void radioB2OnAction(ActionEvent actionEvent) {
-        this.AdjMatrix.setSelected(false);
-        this.AdjList.setSelected(true);
-        this.LinkedList.setSelected(false);
+        pane.getChildren().addAll(line, weightText);
     }
 
     @FXML
-    public void kruskalOnAction(ActionEvent actionEvent) {
-        KruskalRadioButton.setSelected(true);
-        PrimRadioButton.setSelected(false);
+    public void KruskalOnAction(ActionEvent actionEvent) {
     }
 
     @FXML
-    public void primOnAction(ActionEvent actionEvent) {
-        KruskalRadioButton.setSelected(false);
-        PrimRadioButton.setSelected(true);
+    public void AdjencyListOnActon(ActionEvent actionEvent) {
     }
 
-    class Vertex {
-        private int id;
+    @FXML
+    public void PrimOnAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void LinkedListOnAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void AdjencyMatrixOnAction(ActionEvent actionEvent) {
+    }
+
+    private static class Graph {
+        private final int numVertices;
+        private final List<Edge> edges;
+
+        public Graph(int numVertices, List<Edge> edges) {
+            this.numVertices = numVertices;
+            this.edges = edges;
+        }
+
+        public int getNumVertices() {
+            return numVertices;
+        }
+
+        public List<Edge> getEdges() {
+            return edges;
+        }
+    }
+
+    private static class Vertex {
+        private final int id;
         private double x, y;
-        private int data; // Nuevo atributo 'data'
-        private int peso; // Nuevo atributo 'peso'
 
         public Vertex(int id) {
             this.id = id;
         }
 
-        public int getData() {
-            return data;
-        }
-
-        public void setData(int data) {
-            this.data = data;
-        }
-
-        public int getPeso() {
-            return peso;
-        }
-
-        public void setPeso(int peso) {
-            this.peso = peso;
+        public int getId() {
+            return id;
         }
 
         public double getX() {
@@ -233,27 +221,117 @@ public class MSTKrusKalAndPrimController {
         }
     }
 
-    class Edge {
-        private Vertex start;
-        private Vertex end;
-        private int weight;
+    private static class Edge implements Comparable<Edge> {
+        private final int source;
+        private final int destination;
+        private final int weight;
 
-        public Edge(Vertex start, Vertex end, int weight) {
-            this.start = start;
-            this.end = end;
+        public Edge(int source, int destination, int weight) {
+            this.source = source;
+            this.destination = destination;
             this.weight = weight;
         }
 
-        public Vertex getStart() {
-            return start;
+        public int getSource() {
+            return source;
         }
 
-        public Vertex getEnd() {
-            return end;
+        public int getDestination() {
+            return destination;
         }
 
         public int getWeight() {
             return weight;
         }
+
+        @Override
+        public int compareTo(Edge other) {
+            return Integer.compare(this.weight, other.weight);
+        }
+    }
+
+    private static class MSTAlgorithms {
+        public static List<Edge> kruskalMST(Graph graph) {
+            int numVertices = graph.getNumVertices();
+            List<Edge> edges = new ArrayList<>(graph.getEdges());
+            Collections.sort(edges);
+
+            int[] parent = new int[numVertices];
+            for (int i = 0; i < numVertices; i++) {
+                parent[i] = i;
+            }
+
+            List<Edge> mst = new ArrayList<>();
+            for (Edge edge : edges) {
+                int root1 = find(parent, edge.getSource());
+                int root2 = find(parent, edge.getDestination());
+
+                if (root1 != root2) {
+                    mst.add(edge);
+                    union(parent, root1, root2);
+                }
+            }
+            return mst;
+        }
+
+        private static int find(int[] parent, int vertex) {
+            if (parent[vertex] != vertex) {
+                parent[vertex] = find(parent, parent[vertex]);
+            }
+            return parent[vertex];
+        }
+
+        private static void union(int[] parent, int root1, int root2) {
+            parent[root1] = root2;
+        }
+
+        public static List<Edge> primMST(Graph graph) {
+            int numVertices = graph.getNumVertices();
+            boolean[] inMST = new boolean[numVertices];
+            int[] key = new int[numVertices];
+            int[] parent = new int[numVertices];
+
+            for (int i = 0; i < numVertices; i++) {
+                key[i] = Integer.MAX_VALUE;
+                parent[i] = -1;
+            }
+
+            key[0] = 0;
+            for (int count = 0; count < numVertices - 1; count++) {
+                int u = minKey(key, inMST, numVertices);
+                inMST[u] = true;
+
+                for (Edge edge : graph.getEdges()) {
+                    if (edge.getSource() == u) {
+                        int v = edge.getDestination();
+                        if (!inMST[v] && edge.getWeight() < key[v]) {
+                            key[v] = edge.getWeight();
+                            parent[v] = u;
+                        }
+                    }
+                }
+            }
+
+            List<Edge> mst = new ArrayList<>();
+            for (int i = 1; i < numVertices; i++) {
+                mst.add(new Edge(parent[i], i, key[i]));
+            }
+            return mst;
+        }
+
+        private static int minKey(int[] key, boolean[] inMST, int numVertices) {
+            int min = Integer.MAX_VALUE;
+            int minIndex = -1;
+
+            for (int v = 0; v < numVertices; v++) {
+                if (!inMST[v] && key[v] < min) {
+                    min = key[v];
+                    minIndex = v;
+                }
+            }
+            return minIndex;
+        }
     }
 }
+
+

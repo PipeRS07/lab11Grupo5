@@ -8,7 +8,7 @@
    <children>
       <Pane layoutX="257.0" layoutY="9.0" prefHeight="56.0" prefWidth="600.0">
          <children>
-            <Text layoutX="72.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Minimun Spanning Tree">
+            <Text layoutX="72.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimum Spanning Tree">
                <font>
                   <Font name="Impact" size="25.0" />
                </font>
@@ -26,12 +26,12 @@
             <Font name="Bauhaus 93" size="19.0" />
          </font>
       </Text>
-      <RadioButton fx:id="KruskalRadioButton" layoutX="649.0" layoutY="124.0" mnemonicParsing="false" onAction="#kruskalOnAction" text="Kruskal" />
-      <RadioButton fx:id="PrimRadioButton" layoutX="649.0" layoutY="146.0" mnemonicParsing="false" onAction="#primOnAction" text="Prim" />
-      <Pane fx:id="dibujo1" layoutX="65.0" layoutY="233.0" prefHeight="310.0" prefWidth="360.0" style="-fx-background-color: #bdb8ad;" />
-      <RadioButton fx:id="AdjMatrix" layoutX="245.0" layoutY="124.0" mnemonicParsing="false" onAction="#radioB1OnAction" text="Adjacency Matrix" />
-      <RadioButton fx:id="AdjList" layoutX="245.0" layoutY="146.0" mnemonicParsing="false" onAction="#radioB2OnAction" text="Adjacency List" />
-      <RadioButton fx:id="LinkedList" layoutX="245.0" layoutY="168.0" mnemonicParsing="false" onAction="#radioB3OnAction" text="Linked List" />
-      <Pane fx:id="dibujo11" layoutX="458.0" layoutY="233.0" prefHeight="310.0" prefWidth="360.0" style="-fx-background-color: #bdb8ad;" />
+      <RadioButton fx:id="Kruskal" layoutX="649.0" layoutY="124.0" mnemonicParsing="false" onAction="#KruskalOnAction" text="Kruskal" />
+      <RadioButton fx:id="Prim" layoutX="649.0" layoutY="146.0" mnemonicParsing="false" onAction="#PrimOnAction" text="Prim" />
+      <Pane fx:id="dibujo" layoutX="65.0" layoutY="233.0" prefHeight="310.0" prefWidth="360.0" style="-fx-background-color: #bdb8ad;" />
+      <RadioButton fx:id="AdjMatrix" layoutX="245.0" layoutY="124.0" mnemonicParsing="false" onAction="#AdjencyMatrixOnAction" text="Adjacency Matrix" />
+      <RadioButton fx:id="AdjList" layoutX="245.0" layoutY="146.0" mnemonicParsing="false" onAction="#AdjencyListOnActon" text="Adjacency List" />
+      <RadioButton fx:id="LinkedList" layoutX="245.0" layoutY="168.0" mnemonicParsing="false" onAction="#LinkedListOnAction" text="Linked List" />
+      <Pane fx:id="dibujo1" layoutX="458.0" layoutY="233.0" prefHeight="310.0" prefWidth="360.0" style="-fx-background-color: #bdb8ad;" />
    </children>
 </AnchorPane>
