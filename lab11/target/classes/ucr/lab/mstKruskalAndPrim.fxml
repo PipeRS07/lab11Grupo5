@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MSTKrusKalAndPrimController">
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MSTKrusKalAndPrimController">
    <children>
       <Pane layoutX="257.0" layoutY="9.0" prefHeight="56.0" prefWidth="600.0">
          <children>
@@ -29,12 +26,12 @@
             <Font name="Bauhaus 93" size="19.0" />
          </font>
       </Text>
-      <RadioButton layoutX="649.0" layoutY="124.0" mnemonicParsing="false" text="Kruskal" />
-      <RadioButton layoutX="649.0" layoutY="146.0" mnemonicParsing="false" text="Prim" />
+      <RadioButton fx:id="KruskalRadioButton" layoutX="649.0" layoutY="124.0" mnemonicParsing="false" onAction="#kruskalOnAction" text="Kruskal" />
+      <RadioButton fx:id="PrimRadioButton" layoutX="649.0" layoutY="146.0" mnemonicParsing="false" onAction="#primOnAction" text="Prim" />
       <Pane fx:id="dibujo1" layoutX="65.0" layoutY="233.0" prefHeight="310.0" prefWidth="360.0" style="-fx-background-color: #bdb8ad;" />
-      <RadioButton fx:id="AdjMatrix" layoutX="245.0" layoutY="124.0" mnemonicParsing="false" text="Adjacency Matrix" />
-      <RadioButton fx:id="AdjList" layoutX="245.0" layoutY="146.0" mnemonicParsing="false" text="Adjacency List" />
-      <RadioButton fx:id="LinkedList" layoutX="245.0" layoutY="168.0" mnemonicParsing="false" text="Linked List" />
+      <RadioButton fx:id="AdjMatrix" layoutX="245.0" layoutY="124.0" mnemonicParsing="false" onAction="#radioB1OnAction" text="Adjacency Matrix" />
+      <RadioButton fx:id="AdjList" layoutX="245.0" layoutY="146.0" mnemonicParsing="false" onAction="#radioB2OnAction" text="Adjacency List" />
+      <RadioButton fx:id="LinkedList" layoutX="245.0" layoutY="168.0" mnemonicParsing="false" onAction="#radioB3OnAction" text="Linked List" />
       <Pane fx:id="dibujo11" layoutX="458.0" layoutY="233.0" prefHeight="310.0" prefWidth="360.0" style="-fx-background-color: #bdb8ad;" />
    </children>
 </AnchorPane>
